@@ -1,69 +1,69 @@
 # MEDBOOK
 
-MEDBOOK is a premium appointment booking web app built with Next.js, TypeScript, Tailwind CSS, and SQLite.
+MEDBOOK is a modern appointment booking platform built with Next.js, TypeScript, Tailwind CSS, and SQLite. It combines a premium marketing website with a secure, account-based booking experience for service businesses such as clinics, salons, wellness brands, and consulting teams.
 
-It is designed as a polished portfolio-quality product for clinics, salons, wellness brands, consultants, and other service businesses that need a clean public website plus a secure booking flow.
+## Product Summary
 
-## Overview
+MEDBOOK is structured like a real client-ready web application:
 
-MEDBOOK combines a modern marketing site with an authenticated appointment system:
+- polished landing page and service presentation
+- authenticated user flows
+- protected booking and dashboard experience
+- persistent backend with validation and access control
+- adaptable business configuration for different appointment-based brands
 
-- Public landing page with a premium healthcare and SaaS-inspired design
-- Services catalog with categorized service cards
-- Secure account creation and sign-in
-- Protected booking flow tied to the signed-in user
-- Private dashboard for viewing and cancelling appointments
-- SQLite-backed API with validation, session auth, and booking ownership checks
+The project is intentionally lightweight in scope, but it is implemented with production-minded structure and clear separation between UI, API, validation, authentication, and data access.
 
-## Tech Stack
+## Core Functionality
 
-- `Next.js 14` with the App Router
-- `TypeScript`
-- `Tailwind CSS`
-- `React 18`
-- `better-sqlite3` for persistent local data storage
-- `bcryptjs` for password hashing
-- `jsonwebtoken` for signed session cookies
-- `zod` for shared API and form validation
+### Public Website
 
-## Main Features
-
-### Public Experience
-
-- Premium landing page with hero, services preview, testimonials, CTA, and contact section
-- Services page with filtering by category
-- Responsive layout optimized for mobile, tablet, and desktop
+- premium landing page with hero, services preview, testimonials, contact block, and call-to-action sections
+- responsive services page with category filtering
+- reusable design system for buttons, cards, layout shells, and section headers
 
 ### Authentication
 
-- User registration
-- User login
-- User logout
-- Session-based authentication using HTTP-only cookies
-- Protected routes for booking and dashboard pages
+- user registration
+- user login
+- user logout
+- session-based authentication with HTTP-only cookies
+- protected booking and dashboard routes
 
-### Booking System
+### Booking Flow
 
-- Authenticated appointment booking form
-- Fields for name, email, phone, service, date, time, and notes
-- Booking summary card with live details
-- Server-side and client-side validation
-- Conflict protection to prevent double-booking the same confirmed slot
+- create appointments from a guided form
+- collect full name, email, phone, service, date, time, and notes
+- live booking summary alongside the form
+- shared client/server validation
+- slot conflict protection for confirmed bookings
 
 ### Dashboard
 
-- View appointments belonging only to the signed-in user
-- Cancel existing bookings
-- Empty state and loading state handling
-- Account-based booking history instead of public email lookup
+- view appointments for the current user only
+- cancel bookings securely
+- loading, empty, and success/error states
+- account-scoped history instead of public email lookup
 
-### API
+### API Layer
 
-- Auth endpoints for register, login, logout, and session checks
-- Bookings endpoints for create, list, fetch, and cancel
-- Public services endpoint for frontend consumption
+- authentication endpoints
+- booking CRUD-style endpoints for the signed-in user
+- public services endpoint
+- validation and ownership checks at the route level
 
-## Project Structure
+## Tech Stack
+
+- `Next.js 14`
+- `React 18`
+- `TypeScript`
+- `Tailwind CSS`
+- `better-sqlite3`
+- `bcryptjs`
+- `jsonwebtoken`
+- `zod`
+
+## Architecture
 
 ```text
 app/
@@ -85,79 +85,73 @@ public/
 
 ## Key Files
 
-- `app/page.tsx` - landing page
-- `app/services/page.tsx` - services catalog
+- `app/page.tsx` - marketing landing page
+- `app/services/page.tsx` - service catalog
 - `app/booking/page.tsx` - protected booking page
 - `app/dashboard/page.tsx` - protected user dashboard
-- `app/api/auth/*` - authentication API routes
-- `app/api/bookings/*` - booking API routes
-- `app/api/services/route.ts` - services API endpoint
-- `lib/db.ts` - SQLite database setup
-- `lib/auth.ts` - session cookie handling and auth helpers
-- `lib/bookings.ts` - booking queries and mutation logic
-- `lib/users.ts` - user queries and creation
-- `lib/validators.ts` - shared request validation
-- `config/site.ts` - editable business content and services configuration
+- `app/api/auth/*` - auth routes for register, login, logout, and session
+- `app/api/bookings/*` - booking routes with ownership checks
+- `app/api/services/route.ts` - public service data endpoint
+- `lib/db.ts` - SQLite initialization and schema setup
+- `lib/auth.ts` - session creation, cookie handling, and auth helpers
+- `lib/users.ts` - user queries and persistence
+- `lib/bookings.ts` - booking queries, creation, and cancellation logic
+- `lib/validators.ts` - shared validation schemas
+- `config/site.ts` - editable business content and service configuration
 
 ## API Endpoints
 
-### Auth
+### Authentication
 
-- `POST /api/auth/register` - create a new account
-- `POST /api/auth/login` - sign in with email and password
-- `POST /api/auth/logout` - clear the current session
+- `POST /api/auth/register` - create an account
+- `POST /api/auth/login` - authenticate a user
+- `POST /api/auth/logout` - clear the active session
 - `GET /api/auth/session` - return the current authenticated user
 
 ### Bookings
 
-- `GET /api/bookings` - list bookings for the current user
+- `GET /api/bookings` - return bookings for the current user
 - `POST /api/bookings` - create a booking for the current user
-- `GET /api/bookings/:id` - fetch one booking owned by the current user
-- `PATCH /api/bookings/:id` - cancel a booking owned by the current user
+- `GET /api/bookings/:id` - return a single owned booking
+- `PATCH /api/bookings/:id` - cancel an owned booking
 - `DELETE /api/bookings/:id` - alias for cancellation
 
 ### Services
 
-- `GET /api/services` - return the configured list of services
+- `GET /api/services` - return configured service data
 
-## Getting Started
+## Local Development
 
-### 1. Install dependencies
+### Install dependencies
 
 ```bash
 npm install
 ```
 
-### 2. Configure environment variables
+### Environment variables
 
-The project includes an example file:
-
-```bash
-.env.example
-```
-
-Required variables:
+Example configuration:
 
 ```env
 AUTH_SECRET=replace-with-a-long-random-secret
 DATABASE_PATH=./data/medbook.db
 ```
 
-For local development, a working `.env.local` can be used.
+The repository includes [`.env.example`](./.env.example) as a template.
 
-### 3. Start the development server
+### Start the development server
 
 ```bash
 npm run dev
 ```
 
-Open:
+Application URL:
 
 ```text
 http://localhost:3000
 ```
 
-### 4. Run a production build
+### Production build
 
 ```bash
 npm run build
@@ -166,49 +160,44 @@ npm run start
 
 ## Available Scripts
 
-- `npm run dev` - start the local development server
+- `npm run dev` - run the development server
 - `npm run build` - create the production build
-- `npm run start` - start the production server
+- `npm run start` - run the production server
 - `npm run lint` - run Next.js linting
 
-## Database
+## Data and Security
 
-MEDBOOK currently uses SQLite for simplicity and portability.
-
-- Database file location is controlled by `DATABASE_PATH`
-- Tables are created automatically on startup
-- User passwords are stored as hashes, never plain text
-- Confirmed booking slots are protected by a unique index to prevent duplicates
-
-This makes the project easy to run locally and suitable for a portfolio/demo deployment.
+- SQLite is used for simple local persistence
+- passwords are hashed with `bcryptjs`
+- sessions are stored in signed HTTP-only cookies
+- booking routes require authentication
+- users can access only their own appointments
+- confirmed booking slots are protected against duplicate reservations
 
 ## Customization
 
-To adapt MEDBOOK for a clinic, salon, or consulting business, update:
+MEDBOOK is easy to adapt for different businesses. The main configuration surface is:
 
-- `config/site.ts` for business name, services, contact details, testimonials, and UI copy
-- `public/images` for brand and marketing visuals
-- Tailwind and global styles for theme adjustments if needed
+- `config/site.ts` for brand name, services, content, testimonials, and contact details
+- `public/images` for local brand and marketing assets
+- `app/globals.css` and `tailwind.config.js` for visual theme adjustments
 
-## Production Notes
+## Production Considerations
 
-This project is structured to feel production-ready, but for a larger real-world deployment you may want to add:
+The current implementation is strong for a portfolio project, demo environment, or single-instance deployment. For a larger real-world rollout, typical next steps would be:
 
-- PostgreSQL or MySQL instead of SQLite for multi-instance deployments
-- Rate limiting on auth and booking endpoints
-- Email confirmations and reminders
-- Admin roles and appointment management tools
-- Audit logging and monitoring
-- End-to-end tests and CI pipelines
+- move from SQLite to PostgreSQL or MySQL
+- add rate limiting for auth and booking routes
+- add email confirmations and reminders
+- add admin roles and operational tools
+- add monitoring, audit logging, and automated tests
 
-## Why This Project Works Well as a Portfolio Piece
+## Project Value
 
-- Strong visual presentation with a premium UI
-- Real authentication instead of static demo forms
-- Persistent backend with protected API routes
-- Clean separation between UI, API, validation, and data access
-- Easily adaptable to different appointment-based businesses
+MEDBOOK works well as a portfolio project because it demonstrates:
 
-## License
-
-This project is intended for portfolio and educational use unless you define your own license.
+- premium frontend execution
+- practical UX design for booking flows
+- real authentication and protected APIs
+- clean TypeScript and component structure
+- a business-ready foundation that can be extended for client work
