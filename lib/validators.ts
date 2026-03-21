@@ -1,11 +1,17 @@
 import { z } from "zod";
 import { siteConfig } from "@/config/site";
 import { getLocalDateInputValue } from "@/lib/format";
+import { isValidTime, timeToMinutes } from "@/lib/schedule";
 
 const availableServiceIds = new Set(siteConfig.services.map((service) => service.id));
-const availableAppointmentTimes = new Set(siteConfig.appointmentTimes);
 
 const trimmedString = (message: string) => z.string().trim().min(1, message);
+const timeStringSchema = z
+  .string()
+  .trim()
+  .refine((value) => isValidTime(value), "Enter a valid time.");
+const dateStringSchema = trimmedString("Select a valid date.")
+  .refine((value) => !Number.isNaN(Date.parse(`${value}T00:00:00`)), "Select a valid date.");
 
 export const registerSchema = z
   .object({
@@ -45,17 +51,57 @@ export const bookingSchema = z.object({
     (value) => availableServiceIds.has(value),
     "Choose a valid service."
   ),
-  preferredDate: trimmedString("Select a preferred date.")
-    .refine((value) => !Number.isNaN(Date.parse(`${value}T00:00:00`)), "Select a valid date.")
+  preferredDate: dateStringSchema
     .refine(
       (value) => value >= getLocalDateInputValue(),
       "Preferred date must be today or later."
     ),
-  preferredTime: trimmedString("Select a preferred time.").refine(
-    (value) => availableAppointmentTimes.has(value),
-    "Choose a valid time."
-  ),
+  preferredTime: timeStringSchema,
   notes: z.string().trim().max(500, "Keep notes under 500 characters.").optional().default("")
+});
+
+export const availabilityWindowSchema = z
+  .object({
+    weekday: z.number().int().min(0).max(6),
+    startTime: timeStringSchema,
+    endTime: timeStringSchema
+  })
+  .superRefine(({ startTime, endTime }, context) => {
+    if (timeToMinutes(startTime) >= timeToMinutes(endTime)) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["endTime"],
+        message: "End time must be later than the start time."
+      });
+    }
+  });
+
+export const blackoutDateSchema = z.object({
+  date: dateStringSchema.refine(
+    (value) => value >= getLocalDateInputValue(),
+    "Blackout date must be today or later."
+  ),
+  reason: z.string().trim().max(120, "Keep the reason under 120 characters.").optional().default("")
+});
+
+export const bookingStatusSchema = z.object({
+  status: z.enum(["confirmed", "cancelled", "completed"])
+});
+
+export const slotsQuerySchema = z.object({
+  serviceId: trimmedString("Choose a valid service.").refine(
+    (value) => availableServiceIds.has(value),
+    "Choose a valid service."
+  ),
+  date: dateStringSchema
+});
+
+export const availableDatesQuerySchema = z.object({
+  serviceId: trimmedString("Choose a valid service.").refine(
+    (value) => availableServiceIds.has(value),
+    "Choose a valid service."
+  ),
+  days: z.coerce.number().int().min(1).max(60).optional()
 });
 
 export function getValidationMessage(error: z.ZodError, fallback: string) {

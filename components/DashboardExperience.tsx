@@ -111,9 +111,16 @@ export default function DashboardExperience({ user }: DashboardExperienceProps) 
             title={`Welcome back, ${user.name.split(" ")[0]}.`}
             description="Your appointments are linked to your signed-in account, with private history and secure cancellation controls."
           />
-          <Link href="/booking" className={buttonClasses("primary", "sm")}>
-            Book another appointment
-          </Link>
+          <div className="flex flex-wrap gap-3">
+            {user.role === "admin" ? (
+              <Link href="/admin" className={buttonClasses("secondary", "sm")}>
+                Open admin
+              </Link>
+            ) : null}
+            <Link href="/booking" className={buttonClasses("primary", "sm")}>
+              Book another appointment
+            </Link>
+          </div>
         </div>
 
         <div className="mt-8 grid gap-4 md:grid-cols-3">

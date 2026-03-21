@@ -5,8 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "node .next/standalone/server.js",
+    "lint": "next lint",
+    "test:integration": "node scripts/integration-test.mjs",
+    "verify": "npm run build && npm run test:integration"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

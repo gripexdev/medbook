@@ -34,6 +34,11 @@ export default async function Navbar() {
                 Dashboard
               </Link>
             ) : null}
+            {user?.role === "admin" ? (
+              <Link href="/admin" className="transition hover:text-slate-950">
+                Admin
+              </Link>
+            ) : null}
           </nav>
 
           <div className="hidden items-center gap-3 md:flex">
@@ -94,7 +99,20 @@ export default async function Navbar() {
             >
               Dashboard
             </Link>
-          ) : (
+          ) : null}
+          {user?.role === "admin" ? (
+            <Link
+              href="/admin"
+              className={buttonClasses(
+                "ghost",
+                "sm",
+                false,
+                "whitespace-nowrap rounded-full border border-transparent"
+              )}
+            >
+              Admin
+            </Link>
+          ) : !user ? (
             <Link
               href="/register"
               className={buttonClasses(
@@ -106,6 +124,8 @@ export default async function Navbar() {
             >
               Create account
             </Link>
+          ) : (
+            <></>
           )}
         </nav>
 

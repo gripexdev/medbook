@@ -4,7 +4,7 @@ import { buttonClasses } from "@/components/Button";
 type EmptyStateProps = {
   title: string;
   description: string;
-  actionHref?: string;
+  actionHref?: string | null;
   actionLabel?: string;
 };
 
@@ -19,9 +19,11 @@ export default function EmptyState({
       <p className="eyebrow">No appointments</p>
       <h3 className="mt-4 font-display text-3xl leading-none text-slate-900">{title}</h3>
       <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-slate-600">{description}</p>
-      <Link href={actionHref} className={buttonClasses("primary", "md", false, "mt-6")}>
-        {actionLabel}
-      </Link>
+      {actionHref ? (
+        <Link href={actionHref} className={buttonClasses("primary", "md", false, "mt-6")}>
+          {actionLabel}
+        </Link>
+      ) : null}
     </div>
   );
 }

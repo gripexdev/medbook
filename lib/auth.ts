@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
-import { findUserById, toSessionUser } from "@/lib/users";
+import { findUserById, isAdminUser, toSessionUser } from "@/lib/users";
 import type { SessionUser } from "@/lib/types";
 
 const SESSION_COOKIE_NAME = "medbook_session";
@@ -123,6 +123,16 @@ export async function requireSessionUser(redirectTo = "/dashboard") {
 
   if (!user) {
     redirect(`/login?redirectTo=${encodeURIComponent(redirectTo)}`);
+  }
+
+  return user;
+}
+
+export async function requireAdminUser(redirectTo = "/admin") {
+  const user = await requireSessionUser(redirectTo);
+
+  if (!isAdminUser(user)) {
+    redirect("/dashboard");
   }
 
   return user;

@@ -7,6 +7,7 @@ const services: Service[] = [
     name: "Initial Consultation",
     description: "A focused first appointment to understand goals, priorities, and the right next step.",
     duration: "45 min",
+    durationMinutes: 45,
     price: "$95",
     image: "/images/services/consultation.svg"
   },
@@ -16,6 +17,7 @@ const services: Service[] = [
     name: "Signature Care Session",
     description: "A premium appointment experience for returning clients who want steady, high-touch support.",
     duration: "60 min",
+    durationMinutes: 60,
     price: "$140",
     image: "/images/services/signature-care.svg"
   },
@@ -25,6 +27,7 @@ const services: Service[] = [
     name: "Follow-Up Review",
     description: "A shorter check-in to review progress, adjust the plan, and confirm your next milestone.",
     duration: "30 min",
+    durationMinutes: 30,
     price: "$75",
     image: "/images/services/follow-up.svg"
   },
@@ -34,6 +37,7 @@ const services: Service[] = [
     name: "Executive Priority Visit",
     description: "A concierge-style session with extra planning time and priority scheduling for busy clients.",
     duration: "75 min",
+    durationMinutes: 75,
     price: "$180",
     image: "/images/services/executive.svg"
   }
@@ -96,6 +100,17 @@ export const siteConfig = {
   ],
   services,
   testimonials,
+  slotIntervalMinutes: 15,
+  bookingWindowDays: 21,
+  reminderLeadHours: 24,
+  defaultAvailability: [
+    { weekday: 1, startTime: "09:00", endTime: "17:00" },
+    { weekday: 2, startTime: "09:00", endTime: "17:00" },
+    { weekday: 3, startTime: "09:00", endTime: "17:00" },
+    { weekday: 4, startTime: "09:00", endTime: "17:00" },
+    { weekday: 5, startTime: "09:00", endTime: "16:00" },
+    { weekday: 6, startTime: "10:00", endTime: "14:00" }
+  ],
   steps: [
     {
       title: "Choose service",
@@ -109,15 +124,5 @@ export const siteConfig = {
       title: "Confirm booking",
       description: "Submit once and review your confirmed appointment from the dashboard."
     }
-  ],
-  appointmentTimes: [
-    "09:00",
-    "09:30",
-    "10:00",
-    "11:00",
-    "12:30",
-    "14:00",
-    "15:30",
-    "17:00"
   ]
 };

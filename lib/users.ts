@@ -37,6 +37,24 @@ export function toSessionUser(user: Pick<AuthUser, "id" | "name" | "email" | "ro
   };
 }
 
+export function getConfiguredAdminEmail() {
+  return process.env.ADMIN_EMAIL?.trim().toLowerCase() || "";
+}
+
+export function isAdminUser(user: Pick<SessionUser, "role" | "email"> | null | undefined) {
+  if (!user || user.role !== "admin") {
+    return false;
+  }
+
+  const configuredAdminEmail = getConfiguredAdminEmail();
+
+  if (!configuredAdminEmail) {
+    return true;
+  }
+
+  return user.email.trim().toLowerCase() === configuredAdminEmail;
+}
+
 export function findUserById(id: string) {
   const row = db
     .prepare("SELECT id, name, email, password_hash, role, created_at, updated_at FROM users WHERE id = ?")

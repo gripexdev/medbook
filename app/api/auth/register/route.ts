@@ -1,6 +1,8 @@
 import { hash } from "bcryptjs";
 import { NextResponse } from "next/server";
 import { applySessionCookie } from "@/lib/auth";
+import { getClientIp } from "@/lib/request";
+import { applyRateLimit } from "@/lib/rate-limit";
 import { createUser, findUserByEmail, toSessionUser } from "@/lib/users";
 import { getValidationMessage, registerSchema } from "@/lib/validators";
 
@@ -14,6 +16,20 @@ function isUniqueConstraintError(error: unknown) {
 }
 
 export async function POST(request: Request) {
+  const clientIp = getClientIp(request);
+  const rateLimit = applyRateLimit({
+    key: `auth:register:${clientIp}`,
+    limit: 5,
+    windowMs: 10 * 60 * 1000
+  });
+
+  if (!rateLimit.success) {
+    return NextResponse.json(
+      { error: "Too many registration attempts. Please try again shortly." },
+      { status: 429 }
+    );
+  }
+
   try {
     const payload = await request.json();
     const validation = registerSchema.safeParse(payload);
@@ -55,8 +71,6 @@ export async function POST(request: Request) {
 
     return response;
   } catch (error) {
-    console.error("Registration error", error);
-
     if (isUniqueConstraintError(error)) {
       return NextResponse.json(
         { error: "An account with that email already exists." },

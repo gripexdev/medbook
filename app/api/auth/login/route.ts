@@ -1,10 +1,26 @@
 import { compare } from "bcryptjs";
 import { NextResponse } from "next/server";
 import { applySessionCookie } from "@/lib/auth";
+import { getClientIp } from "@/lib/request";
+import { applyRateLimit } from "@/lib/rate-limit";
 import { findUserByEmail, toSessionUser } from "@/lib/users";
 import { getValidationMessage, loginSchema } from "@/lib/validators";
 
 export async function POST(request: Request) {
+  const clientIp = getClientIp(request);
+  const rateLimit = applyRateLimit({
+    key: `auth:login:${clientIp}`,
+    limit: 8,
+    windowMs: 10 * 60 * 1000
+  });
+
+  if (!rateLimit.success) {
+    return NextResponse.json(
+      { error: "Too many sign-in attempts. Please try again shortly." },
+      { status: 429 }
+    );
+  }
+
   try {
     const payload = await request.json();
     const validation = loginSchema.safeParse(payload);
@@ -42,9 +58,7 @@ export async function POST(request: Request) {
     await applySessionCookie(response, sessionUser, request);
 
     return response;
-  } catch (error) {
-    console.error("Login error", error);
-
+  } catch {
     return NextResponse.json(
       { error: "Unable to sign you in right now." },
       { status: 500 }

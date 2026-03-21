@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cancelBookingForUser, getBookingByIdForUser } from "@/lib/bookings";
 import { getSessionUser } from "@/lib/auth";
+import { sendBookingCancellationNotification } from "@/lib/notifications";
 
 type BookingRouteContext = {
   params: {
@@ -39,13 +40,21 @@ export async function PATCH(_request: Request, { params }: BookingRouteContext) 
   }
 
   try {
-    const booking = cancelBookingForUser(user.id, params.id);
+    const result = cancelBookingForUser(user.id, params.id);
 
-    if (!booking) {
+    if (!result) {
       return NextResponse.json({ error: "Booking not found." }, { status: 404 });
     }
 
-    return NextResponse.json({ booking });
+    if ("error" in result) {
+      return NextResponse.json({ error: result.error }, { status: result.status });
+    }
+
+    if (result.booking.status === "cancelled") {
+      await sendBookingCancellationNotification(result.booking);
+    }
+
+    return NextResponse.json({ booking: result.booking });
   } catch {
     return NextResponse.json(
       { error: "Unable to update the booking right now." },
