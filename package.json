@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "node scripts/prepare-standalone.mjs",
     "start": "node .next/standalone/server.js",
+    "start:next": "next start",
     "lint": "next lint",
     "test:integration": "node scripts/integration-test.mjs",
     "verify": "npm run build && npm run test:integration"
