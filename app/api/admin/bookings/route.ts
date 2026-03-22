@@ -18,7 +18,7 @@ function forbiddenResponse() {
   );
 }
 
-const DEFAULT_PAGE_SIZE = 6;
+const DEFAULT_PAGE_SIZE = 8;
 const MAX_PAGE_SIZE = 24;
 
 function parsePositiveInt(value: string | null, fallback: number) {

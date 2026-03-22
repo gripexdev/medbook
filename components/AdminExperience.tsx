@@ -3,6 +3,7 @@
 import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import AdminBookingCard from "@/components/AdminBookingCard";
+import AdminBookingListItem from "@/components/AdminBookingListItem";
 import Button from "@/components/Button";
 import EmptyState from "@/components/EmptyState";
 import InputField from "@/components/InputField";
@@ -43,7 +44,7 @@ const initialSummary: AdminBookingSummary = {
 
 const initialPagination: PaginationMeta = {
   page: 1,
-  pageSize: 6,
+  pageSize: 8,
   total: 0,
   totalPages: 1,
   hasPreviousPage: false,
@@ -112,9 +113,10 @@ export default function AdminExperience({ user }: AdminExperienceProps) {
   const [pagination, setPagination] = useState<PaginationMeta>(initialPagination);
   const [statusFilter, setStatusFilter] = useState<AdminBookingStatusFilter>("all");
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(6);
+  const [pageSize, setPageSize] = useState(8);
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedBookingId, setSelectedBookingId] = useState("");
   const [windows, setWindows] = useState<AvailabilityWindowRecord[]>([]);
   const [blackouts, setBlackouts] = useState<BlackoutDateRecord[]>([]);
   const [isBookingsLoading, setIsBookingsLoading] = useState(true);
@@ -237,6 +239,17 @@ export default function AdminExperience({ user }: AdminExperienceProps) {
   useEffect(() => {
     void loadSchedulingData();
   }, [loadSchedulingData]);
+
+  useEffect(() => {
+    if (bookings.length === 0) {
+      setSelectedBookingId("");
+      return;
+    }
+
+    setSelectedBookingId((current) =>
+      bookings.some((booking) => booking.id === current) ? current : bookings[0]?.id || ""
+    );
+  }, [bookings]);
 
   const handleBookingStatusChange = async (bookingId: string, status: BookingStatus) => {
     setPendingBookingId(bookingId);
@@ -403,6 +416,10 @@ export default function AdminExperience({ user }: AdminExperienceProps) {
   };
 
   const hasActiveFilters = statusFilter !== "all" || searchInput.trim().length > 0;
+  const selectedBooking = useMemo(
+    () => bookings.find((booking) => booking.id === selectedBookingId) || null,
+    [bookings, selectedBookingId]
+  );
   const pageLabel =
     pagination.total === 0
       ? "No appointments found"
@@ -414,6 +431,19 @@ export default function AdminExperience({ user }: AdminExperienceProps) {
     () => getVisiblePages(pagination.page, pagination.totalPages),
     [pagination.page, pagination.totalPages]
   );
+
+  const handleSelectBooking = (bookingId: string) => {
+    setSelectedBookingId(bookingId);
+
+    if (typeof window !== "undefined" && window.innerWidth < 1280) {
+      window.requestAnimationFrame(() => {
+        document.getElementById("admin-booking-details")?.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      });
+    }
+  };
 
   return (
     <div className="section-shell py-12 sm:py-16">
@@ -461,82 +491,87 @@ export default function AdminExperience({ user }: AdminExperienceProps) {
           <SummaryCard label="Today" value={summary.today} description="Appointments scheduled for the current day." />
         </section>
 
-        <section className="grid gap-8 xl:grid-cols-[minmax(0,1.28fr)_minmax(320px,0.72fr)]">
-          <div className="panel p-6 sm:p-8">
-            <SectionHeading
-              title="Appointment operations"
-              description="Search by client, service, email, date, or phone. Filter by booking state and work through the queue with paginated results."
+        <section className="panel p-6 sm:p-8">
+          <SectionHeading
+            title="Appointment operations"
+            description="Review the queue in a compact list. Open only the appointment you want to manage, then update status and inspect client details in the side panel."
+            action={
+              <Button variant="secondary" size="sm" onClick={() => void loadBookings()}>
+                Refresh
+              </Button>
+            }
+          />
+
+          <div className="mt-8 grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_200px_160px]">
+            <InputField
+              label="Search appointments"
+              placeholder="Client, service, email, date, or phone"
+              value={searchInput}
+              onChange={(event) => {
+                setSearchInput(event.target.value);
+                setPage(1);
+              }}
             />
+            <SelectField
+              label="Status"
+              value={statusFilter}
+              onChange={(event) => {
+                setStatusFilter(event.target.value as AdminBookingStatusFilter);
+                setPage(1);
+              }}
+            >
+              <option value="all">All statuses</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+            </SelectField>
+            <SelectField
+              label="Rows per page"
+              value={String(pageSize)}
+              onChange={(event) => {
+                setPageSize(Number(event.target.value));
+                setPage(1);
+              }}
+            >
+              <option value="8">8 per page</option>
+              <option value="12">12 per page</option>
+              <option value="16">16 per page</option>
+              <option value="24">24 per page</option>
+            </SelectField>
+          </div>
 
-            <div className="mt-8 grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_200px_160px]">
-              <InputField
-                label="Search appointments"
-                placeholder="Client, service, email, date, or phone"
-                value={searchInput}
-                onChange={(event) => {
-                  setSearchInput(event.target.value);
-                  setPage(1);
-                }}
-              />
-              <SelectField
-                label="Status"
-                value={statusFilter}
-                onChange={(event) => {
-                  setStatusFilter(event.target.value as AdminBookingStatusFilter);
-                  setPage(1);
-                }}
-              >
-                <option value="all">All statuses</option>
-                <option value="confirmed">Confirmed</option>
-                <option value="completed">Completed</option>
-                <option value="cancelled">Cancelled</option>
-              </SelectField>
-              <SelectField
-                label="Rows per page"
-                value={String(pageSize)}
-                onChange={(event) => {
-                  setPageSize(Number(event.target.value));
-                  setPage(1);
-                }}
-              >
-                <option value="6">6 per page</option>
-                <option value="12">12 per page</option>
-                <option value="18">18 per page</option>
-                <option value="24">24 per page</option>
-              </SelectField>
+          <div className="mt-6 flex flex-col gap-3 rounded-[24px] border border-slate-200/80 bg-slate-50/80 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-900">{pageLabel}</p>
+              <p className="mt-1 text-xs uppercase tracking-[0.22em] text-slate-400">
+                {hasActiveFilters ? "Filtered queue" : "Operational queue"}
+              </p>
             </div>
-
-            <div className="mt-6 flex flex-col gap-3 rounded-[24px] border border-slate-200/80 bg-slate-50/80 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-900">{pageLabel}</p>
-                <p className="mt-1 text-xs uppercase tracking-[0.22em] text-slate-400">
-                  {hasActiveFilters ? "Filtered results" : "Full queue"}
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-3">
-                {hasActiveFilters ? (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      setSearchInput("");
-                      setSearchQuery("");
-                      setStatusFilter("all");
-                      setPage(1);
-                    }}
-                  >
-                    Clear filters
-                  </Button>
-                ) : null}
-                <Button variant="secondary" size="sm" onClick={() => void loadBookings()}>
-                  Refresh
+            <div className="flex flex-wrap gap-3">
+              {hasActiveFilters ? (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setSearchInput("");
+                    setSearchQuery("");
+                    setStatusFilter("all");
+                    setPage(1);
+                  }}
+                >
+                  Clear filters
                 </Button>
+              ) : null}
+              <div className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs uppercase tracking-[0.18em] text-slate-500">
+                {selectedBooking ? "Detail panel active" : "No appointment selected"}
               </div>
             </div>
+          </div>
 
-            <div className="mt-8">
+          <div className="mt-8 grid gap-6 xl:grid-cols-[minmax(0,1.08fr)_minmax(340px,0.72fr)]">
+            <div>
               {isBookingsLoading ? (
-                <LoadingState rows={4} />
+                <LoadingState rows={5} />
               ) : bookings.length === 0 ? (
                 hasActiveFilters ? (
                   <div className="panel-muted px-6 py-10 text-center">
@@ -568,189 +603,197 @@ export default function AdminExperience({ user }: AdminExperienceProps) {
                   />
                 )
               ) : (
-                <div className="space-y-5">
+                <div className="space-y-3">
                   {bookings.map((booking) => (
-                    <AdminBookingCard
+                    <AdminBookingListItem
                       key={booking.id}
                       booking={booking}
-                      onStatusChange={handleBookingStatusChange}
-                      isPending={pendingBookingId === booking.id}
+                      isSelected={booking.id === selectedBookingId}
+                      onSelect={handleSelectBooking}
                     />
                   ))}
                 </div>
               )}
+
+              {pagination.totalPages > 1 ? (
+                <div className="mt-8 flex flex-col gap-4 border-t border-slate-200/80 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-sm text-slate-500">
+                    Page {pagination.page} of {pagination.totalPages}
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      disabled={!pagination.hasPreviousPage}
+                      onClick={() => setPage((current) => Math.max(1, current - 1))}
+                    >
+                      Previous
+                    </Button>
+                    {visiblePages.map((pageItem) =>
+                      typeof pageItem === "number" ? (
+                        <button
+                          key={pageItem}
+                          type="button"
+                          className={buttonClasses(
+                            pageItem === pagination.page ? "primary" : "ghost",
+                            "sm",
+                            false,
+                            "min-w-[42px] rounded-full border border-transparent"
+                          )}
+                          onClick={() => setPage(pageItem)}
+                        >
+                          {pageItem}
+                        </button>
+                      ) : (
+                        <span key={pageItem} className="px-2 text-sm text-slate-400">
+                          ...
+                        </span>
+                      )
+                    )}
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      disabled={!pagination.hasNextPage}
+                      onClick={() => setPage((current) => Math.min(pagination.totalPages, current + 1))}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </div>
+              ) : null}
             </div>
 
-            {pagination.totalPages > 1 ? (
-              <div className="mt-8 flex flex-col gap-4 border-t border-slate-200/80 pt-6 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-sm text-slate-500">
-                  Page {pagination.page} of {pagination.totalPages}
-                </p>
-                <div className="flex flex-wrap items-center gap-2">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    disabled={!pagination.hasPreviousPage}
-                    onClick={() => setPage((current) => Math.max(1, current - 1))}
-                  >
-                    Previous
-                  </Button>
-                  {visiblePages.map((pageItem) =>
-                    typeof pageItem === "number" ? (
-                      <button
-                        key={pageItem}
-                        type="button"
-                        className={buttonClasses(
-                          pageItem === pagination.page ? "primary" : "ghost",
-                          "sm",
-                          false,
-                          "min-w-[42px] rounded-full border border-transparent"
-                        )}
-                        onClick={() => setPage(pageItem)}
-                      >
-                        {pageItem}
-                      </button>
-                    ) : (
-                      <span key={pageItem} className="px-2 text-sm text-slate-400">
-                        ...
-                      </span>
-                    )
-                  )}
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    disabled={!pagination.hasNextPage}
-                    onClick={() => setPage((current) => Math.min(pagination.totalPages, current + 1))}
-                  >
-                    Next
-                  </Button>
-                </div>
-              </div>
-            ) : null}
+            <div id="admin-booking-details">
+              <AdminBookingCard
+                booking={selectedBooking}
+                onStatusChange={handleBookingStatusChange}
+                isPending={pendingBookingId === selectedBooking?.id}
+              />
+            </div>
           </div>
+        </section>
 
-          <div className="grid gap-8">
-            <section className="panel p-6 sm:p-8">
-              <SectionHeading
-                title="Weekly availability"
-                description="Define recurring working hours. These windows are used to generate public appointment slots."
-              />
+        <section className="grid gap-8 xl:grid-cols-2">
+          <section className="panel p-6 sm:p-8">
+            <SectionHeading
+              title="Weekly availability"
+              description="Define recurring working hours. These windows are used to generate public appointment slots."
+            />
 
-              <form className="mt-8 grid gap-4" onSubmit={handleWindowSubmit}>
-                <SelectField
-                  label="Weekday"
-                  value={windowForm.weekday}
-                  onChange={(event) => setWindowForm((current) => ({ ...current, weekday: event.target.value }))}
-                  error={windowErrors.weekday}
-                >
-                  {Array.from({ length: 7 }).map((_, weekday) => (
-                    <option key={weekday} value={weekday}>
-                      {getWeekdayLabel(weekday)}
-                    </option>
-                  ))}
-                </SelectField>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <InputField
-                    label="Start time"
-                    type="time"
-                    value={windowForm.startTime}
-                    onChange={(event) => setWindowForm((current) => ({ ...current, startTime: event.target.value }))}
-                    error={windowErrors.startTime}
-                  />
-                  <InputField
-                    label="End time"
-                    type="time"
-                    value={windowForm.endTime}
-                    onChange={(event) => setWindowForm((current) => ({ ...current, endTime: event.target.value }))}
-                    error={windowErrors.endTime}
-                  />
-                </div>
-                <Button type="submit" disabled={isSavingWindow} className="w-full">
-                  {isSavingWindow ? "Saving..." : "Add availability window"}
-                </Button>
-              </form>
-
-              <div className="mt-8 space-y-3">
-                {isSchedulingLoading ? (
-                  <LoadingState rows={3} />
-                ) : windows.length === 0 ? (
-                  <div className="rounded-[24px] border border-dashed border-slate-200 px-5 py-5 text-sm leading-7 text-slate-500">
-                    No weekly availability has been configured yet.
-                  </div>
-                ) : (
-                  windows.map((window) => (
-                    <div
-                      key={window.id}
-                      className="flex flex-col gap-3 rounded-[24px] border border-slate-200/80 bg-slate-50/90 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
-                    >
-                      <div>
-                        <p className="text-sm font-semibold text-slate-900">{getWeekdayLabel(window.weekday)}</p>
-                        <p className="mt-1 text-sm text-slate-500">
-                          {window.startTime} to {window.endTime}
-                        </p>
-                      </div>
-                      <Button variant="ghost" size="sm" onClick={() => handleDeleteWindow(window.id)}>
-                        Remove
-                      </Button>
-                    </div>
-                  ))
-                )}
-              </div>
-            </section>
-
-            <section className="panel p-6 sm:p-8">
-              <SectionHeading
-                title="Blackout dates"
-                description="Block full days when the team is unavailable, on holiday, or otherwise closed."
-              />
-
-              <form className="mt-8 grid gap-4" onSubmit={handleBlackoutSubmit}>
+            <form className="mt-8 grid gap-4" onSubmit={handleWindowSubmit}>
+              <SelectField
+                label="Weekday"
+                value={windowForm.weekday}
+                onChange={(event) => setWindowForm((current) => ({ ...current, weekday: event.target.value }))}
+                error={windowErrors.weekday}
+              >
+                {Array.from({ length: 7 }).map((_, weekday) => (
+                  <option key={weekday} value={weekday}>
+                    {getWeekdayLabel(weekday)}
+                  </option>
+                ))}
+              </SelectField>
+              <div className="grid gap-4 sm:grid-cols-2">
                 <InputField
-                  label="Date"
-                  type="date"
-                  min={getLocalDateInputValue()}
-                  value={blackoutForm.date}
-                  onChange={(event) => setBlackoutForm((current) => ({ ...current, date: event.target.value }))}
-                  error={blackoutErrors.date}
+                  label="Start time"
+                  type="time"
+                  value={windowForm.startTime}
+                  onChange={(event) => setWindowForm((current) => ({ ...current, startTime: event.target.value }))}
+                  error={windowErrors.startTime}
                 />
                 <InputField
-                  label="Reason"
-                  placeholder="Holiday, maintenance, clinic closure..."
-                  value={blackoutForm.reason}
-                  onChange={(event) => setBlackoutForm((current) => ({ ...current, reason: event.target.value }))}
-                  error={blackoutErrors.reason}
+                  label="End time"
+                  type="time"
+                  value={windowForm.endTime}
+                  onChange={(event) => setWindowForm((current) => ({ ...current, endTime: event.target.value }))}
+                  error={windowErrors.endTime}
                 />
-                <Button type="submit" disabled={isSavingBlackout} className="w-full">
-                  {isSavingBlackout ? "Saving..." : "Add blackout date"}
-                </Button>
-              </form>
-
-              <div className="mt-8 space-y-3">
-                {isSchedulingLoading ? (
-                  <LoadingState rows={2} />
-                ) : blackouts.length === 0 ? (
-                  <div className="rounded-[24px] border border-dashed border-slate-200 px-5 py-5 text-sm leading-7 text-slate-500">
-                    No blackout dates are currently set.
-                  </div>
-                ) : (
-                  blackouts.map((blackout) => (
-                    <div
-                      key={blackout.id}
-                      className="flex flex-col gap-3 rounded-[24px] border border-slate-200/80 bg-slate-50/90 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
-                    >
-                      <div>
-                        <p className="text-sm font-semibold text-slate-900">{blackout.date}</p>
-                        <p className="mt-1 text-sm text-slate-500">{blackout.reason || "Blackout date"}</p>
-                      </div>
-                      <Button variant="ghost" size="sm" onClick={() => handleDeleteBlackout(blackout.id)}>
-                        Remove
-                      </Button>
-                    </div>
-                  ))
-                )}
               </div>
-            </section>
-          </div>
+              <Button type="submit" disabled={isSavingWindow} className="w-full">
+                {isSavingWindow ? "Saving..." : "Add availability window"}
+              </Button>
+            </form>
+
+            <div className="mt-8 space-y-3">
+              {isSchedulingLoading ? (
+                <LoadingState rows={3} />
+              ) : windows.length === 0 ? (
+                <div className="rounded-[24px] border border-dashed border-slate-200 px-5 py-5 text-sm leading-7 text-slate-500">
+                  No weekly availability has been configured yet.
+                </div>
+              ) : (
+                windows.map((window) => (
+                  <div
+                    key={window.id}
+                    className="flex flex-col gap-3 rounded-[24px] border border-slate-200/80 bg-slate-50/90 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div>
+                      <p className="text-sm font-semibold text-slate-900">{getWeekdayLabel(window.weekday)}</p>
+                      <p className="mt-1 text-sm text-slate-500">
+                        {window.startTime} to {window.endTime}
+                      </p>
+                    </div>
+                    <Button variant="ghost" size="sm" onClick={() => handleDeleteWindow(window.id)}>
+                      Remove
+                    </Button>
+                  </div>
+                ))
+              )}
+            </div>
+          </section>
+
+          <section className="panel p-6 sm:p-8">
+            <SectionHeading
+              title="Blackout dates"
+              description="Block full days when the team is unavailable, on holiday, or otherwise closed."
+            />
+
+            <form className="mt-8 grid gap-4" onSubmit={handleBlackoutSubmit}>
+              <InputField
+                label="Date"
+                type="date"
+                min={getLocalDateInputValue()}
+                value={blackoutForm.date}
+                onChange={(event) => setBlackoutForm((current) => ({ ...current, date: event.target.value }))}
+                error={blackoutErrors.date}
+              />
+              <InputField
+                label="Reason"
+                placeholder="Holiday, maintenance, clinic closure..."
+                value={blackoutForm.reason}
+                onChange={(event) => setBlackoutForm((current) => ({ ...current, reason: event.target.value }))}
+                error={blackoutErrors.reason}
+              />
+              <Button type="submit" disabled={isSavingBlackout} className="w-full">
+                {isSavingBlackout ? "Saving..." : "Add blackout date"}
+              </Button>
+            </form>
+
+            <div className="mt-8 space-y-3">
+              {isSchedulingLoading ? (
+                <LoadingState rows={2} />
+              ) : blackouts.length === 0 ? (
+                <div className="rounded-[24px] border border-dashed border-slate-200 px-5 py-5 text-sm leading-7 text-slate-500">
+                  No blackout dates are currently set.
+                </div>
+              ) : (
+                blackouts.map((blackout) => (
+                  <div
+                    key={blackout.id}
+                    className="flex flex-col gap-3 rounded-[24px] border border-slate-200/80 bg-slate-50/90 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div>
+                      <p className="text-sm font-semibold text-slate-900">{blackout.date}</p>
+                      <p className="mt-1 text-sm text-slate-500">{blackout.reason || "Blackout date"}</p>
+                    </div>
+                    <Button variant="ghost" size="sm" onClick={() => handleDeleteBlackout(blackout.id)}>
+                      Remove
+                    </Button>
+                  </div>
+                ))
+              )}
+            </div>
+          </section>
         </section>
       </div>
 
