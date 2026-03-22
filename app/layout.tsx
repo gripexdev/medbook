@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Manrope, Sora } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -21,7 +21,12 @@ export const metadata: Metadata = {
     default: siteConfig.name,
     template: `%s | ${siteConfig.name}`
   },
-  description: siteConfig.description
+  description: siteConfig.description,
+  applicationName: siteConfig.name
+};
+
+export const viewport: Viewport = {
+  themeColor: "#f8fbff"
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

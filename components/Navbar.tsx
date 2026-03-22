@@ -1,4 +1,5 @@
 import Link from "next/link";
+import BrandLogo from "@/components/BrandLogo";
 import { buttonClasses } from "@/components/Button";
 import SignOutButton from "@/components/SignOutButton";
 import { getSessionUser } from "@/lib/auth";
@@ -11,16 +12,8 @@ export default async function Navbar() {
     <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/80 backdrop-blur-xl">
       <div className="section-shell py-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-3 text-slate-900">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-sm font-semibold text-white shadow-soft">
-              MB
-            </span>
-            <div>
-              <p className="font-display text-2xl leading-none">{siteConfig.name}</p>
-              <p className="mt-1 text-[11px] uppercase tracking-[0.28em] text-slate-400">
-                {siteConfig.businessLabel}
-              </p>
-            </div>
+          <Link href="/" className="text-slate-900 transition hover:opacity-90">
+            <BrandLogo />
           </Link>
 
           <nav className="hidden items-center gap-8 text-sm text-slate-600 md:flex">

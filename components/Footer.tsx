@@ -1,4 +1,5 @@
 import Link from "next/link";
+import BrandLogo from "@/components/BrandLogo";
 import { siteConfig } from "@/config/site";
 
 function SocialIcon({ label }: { label: string }) {
@@ -33,12 +34,11 @@ export default function Footer() {
       <div className="section-shell py-14">
         <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
           <div>
-            <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-sm font-semibold text-white shadow-soft">
-                MB
-              </span>
-              <p className="font-display text-3xl leading-none tracking-[-0.03em] text-slate-950">{siteConfig.name}</p>
-            </div>
+            <BrandLogo
+              showSubtitle={false}
+              markClassName="h-12 w-12"
+              titleClassName="font-display text-3xl leading-none tracking-[-0.05em] text-slate-950"
+            />
             <p className="mt-4 max-w-md text-sm leading-7 text-slate-600">{siteConfig.description}</p>
             <div className="mt-6 flex gap-3">
               {siteConfig.socialLinks.map((item) => (
