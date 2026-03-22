@@ -28,18 +28,18 @@ export default function ServiceCard({
           sizes="(min-width: 1280px) 22vw, (min-width: 768px) 44vw, 100vw"
         />
       </div>
-      <div className="flex h-full flex-col p-6">
-        <div className="flex items-center justify-between gap-3">
+      <div className="flex h-full flex-col p-5 sm:p-6">
+        <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
           <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
             {category}
           </span>
           <span className="text-sm font-semibold text-brand-700">{price}</span>
         </div>
-        <h3 className="mt-5 font-display text-[24px] font-semibold leading-tight tracking-[-0.03em] text-slate-950">
+        <h3 className="mt-5 font-display text-[22px] font-semibold leading-tight tracking-[-0.03em] text-slate-950 sm:text-[24px]">
           {name}
         </h3>
         <p className="mt-4 text-sm leading-7 text-slate-600">{description}</p>
-        <div className="mt-6 flex items-center justify-between text-sm text-slate-500">
+        <div className="mt-6 flex flex-col gap-2 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <span>{duration}</span>
           <span>Premium care</span>
         </div>

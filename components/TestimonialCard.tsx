@@ -3,7 +3,7 @@ import type { Testimonial } from "@/lib/types";
 
 export default function TestimonialCard({ name, role, quote, avatar }: Testimonial) {
   return (
-    <article className="panel hover-lift h-full p-6">
+    <article className="panel hover-lift h-full p-5 sm:p-6">
       <div className="flex items-center gap-3">
         <div className="relative h-14 w-14 overflow-hidden rounded-full ring-4 ring-white">
           <Image src={avatar} alt={name} fill className="object-cover" sizes="56px" />
@@ -20,7 +20,7 @@ export default function TestimonialCard({ name, role, quote, avatar }: Testimoni
           </svg>
         ))}
       </div>
-      <p className="mt-4 text-sm leading-7 text-slate-600">"{quote}"</p>
+      <p className="mt-4 text-sm leading-7 text-slate-600 sm:text-[15px]">"{quote}"</p>
     </article>
   );
 }

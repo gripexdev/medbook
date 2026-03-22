@@ -5,7 +5,7 @@ import { siteConfig } from "@/config/site";
 export default function ServicesPage() {
   return (
     <div className="section-shell py-16">
-      <div className="panel p-8 md:p-10">
+      <div className="panel p-6 sm:p-8 md:p-10">
         <PageIntro
           eyebrow="Services"
           title="A premium catalog with simple filtering"

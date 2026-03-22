@@ -153,7 +153,7 @@ export default function AuthExperience({ mode, redirectTo }: AuthExperienceProps
   return (
     <div className="section-shell py-16">
       <div className="grid gap-8 lg:grid-cols-[0.94fr_1.06fr]">
-        <section className="panel p-8 md:p-10">
+        <section className="panel p-6 sm:p-8 md:p-10">
           <PageIntro
             eyebrow={content.eyebrow}
             title={content.title}
@@ -204,8 +204,8 @@ export default function AuthExperience({ mode, redirectTo }: AuthExperienceProps
               />
             ) : null}
 
-            <div className="flex flex-wrap items-center gap-4">
-              <Button type="submit" size="lg" disabled={isSubmitting}>
+            <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
+              <Button type="submit" size="lg" disabled={isSubmitting} className="w-full sm:w-auto">
                 {isSubmitting ? "Please wait..." : content.submitLabel}
               </Button>
               <p className="text-sm text-slate-500">
@@ -221,9 +221,9 @@ export default function AuthExperience({ mode, redirectTo }: AuthExperienceProps
           </form>
         </section>
 
-        <aside className="panel-muted overflow-hidden p-8 md:p-10">
+        <aside className="panel-muted overflow-hidden p-6 sm:p-8 md:p-10">
           <p className="eyebrow">Professional setup</p>
-          <h2 className="mt-4 font-display text-[38px] font-semibold leading-[1.02] tracking-[-0.04em] text-slate-950 md:text-[48px]">
+          <h2 className="mt-4 font-display text-[32px] font-semibold leading-[1.02] tracking-[-0.04em] text-slate-950 sm:text-[38px] md:text-[48px]">
             Account-based booking with secure API access.
           </h2>
           <p className="mt-5 max-w-xl text-sm leading-7 text-slate-600 md:text-base">

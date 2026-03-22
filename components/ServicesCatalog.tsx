@@ -23,7 +23,7 @@ export default function ServicesCatalog({ services }: ServicesCatalogProps) {
 
   return (
     <div>
-      <div className="flex flex-wrap gap-3">
+      <div className="flex gap-3 overflow-x-auto pb-1">
         {categories.map((category) => (
           <button
             key={category}
@@ -31,7 +31,9 @@ export default function ServicesCatalog({ services }: ServicesCatalogProps) {
             onClick={() => setActiveCategory(category)}
             className={buttonClasses(
               activeCategory === category ? "primary" : "secondary",
-              "sm"
+              "sm",
+              false,
+              "whitespace-nowrap"
             )}
           >
             {category}

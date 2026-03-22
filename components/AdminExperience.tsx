@@ -265,7 +265,7 @@ export default function AdminExperience({ user }: AdminExperienceProps) {
   return (
     <div className="section-shell py-16">
       <div className="grid gap-8">
-        <section className="panel p-8 md:p-10">
+        <section className="panel p-6 sm:p-8 md:p-10">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <PageIntro
               eyebrow="Admin"
@@ -274,14 +274,14 @@ export default function AdminExperience({ user }: AdminExperienceProps) {
             />
             <div className="panel-muted px-5 py-5">
               <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Signed in as</p>
-              <p className="mt-3 text-sm font-semibold text-slate-900">{user.email}</p>
+              <p className="mt-3 break-all text-sm font-semibold text-slate-900">{user.email}</p>
             </div>
           </div>
         </section>
 
         <section className="grid gap-8 xl:grid-cols-[0.94fr_1.06fr]">
-          <div className="panel p-8">
-            <h2 className="font-display text-[34px] leading-none text-slate-950">Weekly availability</h2>
+          <div className="panel p-6 sm:p-8">
+            <h2 className="font-display text-[30px] leading-none text-slate-950 sm:text-[34px]">Weekly availability</h2>
             <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">
               Weekly windows define when the booking form can generate valid appointment slots.
             </p>
@@ -314,7 +314,7 @@ export default function AdminExperience({ user }: AdminExperienceProps) {
                 error={windowErrors.endTime}
               />
               <div className="md:col-span-3">
-                <Button type="submit" disabled={isSavingWindow}>
+                <Button type="submit" disabled={isSavingWindow} className="w-full sm:w-auto">
                   {isSavingWindow ? "Saving..." : "Add availability window"}
                 </Button>
               </div>
@@ -350,8 +350,8 @@ export default function AdminExperience({ user }: AdminExperienceProps) {
             </div>
           </div>
 
-          <div className="panel p-8">
-            <h2 className="font-display text-[34px] leading-none text-slate-950">Blackout dates</h2>
+          <div className="panel p-6 sm:p-8">
+            <h2 className="font-display text-[30px] leading-none text-slate-950 sm:text-[34px]">Blackout dates</h2>
             <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">
               Blackout dates disable booking for a full day, even if a normal weekly window exists.
             </p>
@@ -373,7 +373,7 @@ export default function AdminExperience({ user }: AdminExperienceProps) {
                 error={blackoutErrors.reason}
               />
               <div className="md:col-span-2">
-                <Button type="submit" disabled={isSavingBlackout}>
+                <Button type="submit" disabled={isSavingBlackout} className="w-full sm:w-auto">
                   {isSavingBlackout ? "Saving..." : "Add blackout date"}
                 </Button>
               </div>
@@ -406,7 +406,7 @@ export default function AdminExperience({ user }: AdminExperienceProps) {
           </div>
         </section>
 
-        <section className="panel p-8 md:p-10">
+        <section className="panel p-6 sm:p-8 md:p-10">
           <PageIntro
             eyebrow="Appointments"
             title="Live appointment management"

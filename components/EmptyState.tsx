@@ -17,10 +17,10 @@ export default function EmptyState({
   return (
     <div className="panel-muted px-6 py-10 text-center">
       <p className="eyebrow">No appointments</p>
-      <h3 className="mt-4 font-display text-3xl leading-none text-slate-900">{title}</h3>
+      <h3 className="mt-4 font-display text-[28px] leading-none text-slate-900 sm:text-3xl">{title}</h3>
       <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-slate-600">{description}</p>
       {actionHref ? (
-        <Link href={actionHref} className={buttonClasses("primary", "md", false, "mt-6")}>
+        <Link href={actionHref} className={buttonClasses("primary", "md", false, "mt-6 w-full sm:w-auto")}>
           {actionLabel}
         </Link>
       ) : null}

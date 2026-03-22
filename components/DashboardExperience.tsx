@@ -104,20 +104,20 @@ export default function DashboardExperience({ user }: DashboardExperienceProps) 
 
   return (
     <div className="section-shell py-16">
-      <div className="panel p-8 md:p-10">
+      <div className="panel p-6 sm:p-8 md:p-10">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <PageIntro
             eyebrow="Dashboard"
             title={`Welcome back, ${user.name.split(" ")[0]}.`}
             description="Your appointments are linked to your signed-in account, with private history and secure cancellation controls."
           />
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             {user.role === "admin" ? (
-              <Link href="/admin" className={buttonClasses("secondary", "sm")}>
+              <Link href="/admin" className={buttonClasses("secondary", "sm", false, "w-full sm:w-auto")}>
                 Open admin
               </Link>
             ) : null}
-            <Link href="/booking" className={buttonClasses("primary", "sm")}>
+            <Link href="/booking" className={buttonClasses("primary", "sm", false, "w-full sm:w-auto")}>
               Book another appointment
             </Link>
           </div>
@@ -126,7 +126,7 @@ export default function DashboardExperience({ user }: DashboardExperienceProps) 
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           <div className="panel-muted px-5 py-5">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Account</p>
-            <p className="mt-3 text-sm font-semibold text-slate-900">{user.email}</p>
+            <p className="mt-3 break-all text-sm font-semibold text-slate-900">{user.email}</p>
           </div>
           <div className="panel-muted px-5 py-5">
             <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Total bookings</p>

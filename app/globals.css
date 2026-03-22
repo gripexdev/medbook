@@ -12,6 +12,7 @@ html {
 
 body {
   @apply font-body text-slate-900 antialiased;
+  overflow-x: clip;
   background:
     radial-gradient(circle at top left, rgba(37, 99, 255, 0.1), transparent 28%),
     radial-gradient(circle at top right, rgba(103, 232, 249, 0.12), transparent 26%),
@@ -24,15 +25,15 @@ body {
 
 @layer components {
   .section-shell {
-    @apply mx-auto w-full max-w-[1200px] px-6;
+    @apply mx-auto w-full max-w-[1200px] px-4 sm:px-6;
   }
 
   .panel {
-    @apply rounded-[32px] border border-slate-200/70 bg-white/95 shadow-soft backdrop-blur;
+    @apply rounded-[28px] border border-slate-200/70 bg-white/95 shadow-soft md:rounded-[32px];
   }
 
   .panel-muted {
-    @apply rounded-[30px] border border-slate-200/80 bg-slate-50/90;
+    @apply rounded-[24px] border border-slate-200/80 bg-slate-50/90 md:rounded-[30px];
   }
 
   .hover-lift {

@@ -28,7 +28,7 @@ export default function AppointmentCard({ booking, onCancel, isPending = false }
     <article className="panel flex flex-col gap-5 p-6 md:flex-row md:items-center md:justify-between">
       <div>
         <div className="flex flex-wrap items-center gap-3">
-          <h3 className="font-display text-3xl leading-none text-slate-900">{booking.serviceName}</h3>
+          <h3 className="font-display text-[28px] leading-none text-slate-900 sm:text-3xl">{booking.serviceName}</h3>
           <span className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] ${statusClasses}`}>
             {bookingStatusLabel}
           </span>
@@ -38,7 +38,7 @@ export default function AppointmentCard({ booking, onCancel, isPending = false }
         </p>
         <div className="mt-3 flex flex-wrap gap-4 text-xs uppercase tracking-[0.2em] text-slate-400">
           <span>{booking.fullName}</span>
-          <span>{booking.email}</span>
+          <span className="break-all">{booking.email}</span>
           <span>{booking.phone}</span>
         </div>
         {booking.notes ? (
@@ -49,6 +49,7 @@ export default function AppointmentCard({ booking, onCancel, isPending = false }
         <Button
           variant="secondary"
           size="sm"
+          className="w-full md:w-auto"
           onClick={() => onCancel(booking.id)}
           disabled={isPending || !isConfirmed}
         >

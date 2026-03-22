@@ -13,7 +13,12 @@ export default async function Navbar() {
       <div className="section-shell py-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <Link href="/" className="text-slate-900 transition hover:opacity-90">
-            <BrandLogo />
+            <BrandLogo
+              className="min-w-0"
+              markClassName="h-10 w-10 sm:h-11 sm:w-11"
+              titleClassName="font-display text-[24px] leading-none tracking-[-0.05em] text-slate-950 sm:text-[28px]"
+              subtitleClassName="mt-1 hidden text-[11px] uppercase tracking-[0.28em] text-slate-400 md:block"
+            />
           </Link>
 
           <nav className="hidden items-center gap-8 text-sm text-slate-600 md:flex">
@@ -59,7 +64,7 @@ export default async function Navbar() {
           </div>
 
           <div className="md:hidden">
-            <Link href={user ? "/booking" : "/login"} className={buttonClasses("primary", "sm")}>
+            <Link href={user ? "/booking" : "/login"} className={buttonClasses("primary", "sm", false, "min-w-[104px]")}>
               {user ? "Book Now" : "Sign In"}
             </Link>
           </div>

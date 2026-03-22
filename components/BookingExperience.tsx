@@ -361,7 +361,7 @@ export default function BookingExperience({ initialServiceId, user }: BookingExp
   return (
     <div className="section-shell py-16">
       <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr]">
-        <section className="panel p-8 md:p-10">
+        <section className="panel p-6 sm:p-8 md:p-10">
           <PageIntro
             eyebrow="Booking"
             title="Book a premium appointment"
@@ -369,7 +369,7 @@ export default function BookingExperience({ initialServiceId, user }: BookingExp
           />
 
           <div className="mt-8 rounded-[28px] border border-brand-100 bg-brand-50/70 px-5 py-5 text-sm text-slate-700">
-            <p className="font-semibold text-slate-900">Signed in as {user.email}</p>
+            <p className="break-all font-semibold text-slate-900">Signed in as {user.email}</p>
             <p className="mt-2 leading-7">
               Your booking is saved to this account only. Availability updates live if an admin confirms, cancels,
               completes, or blocks appointments.
@@ -474,8 +474,8 @@ export default function BookingExperience({ initialServiceId, user }: BookingExp
               error={errors.notes}
             />
 
-            <div className="flex flex-wrap items-center gap-4">
-              <Button type="submit" size="lg" disabled={isSubmitting}>
+            <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
+              <Button type="submit" size="lg" disabled={isSubmitting} className="w-full sm:w-auto">
                 {isSubmitting ? "Confirming..." : "Confirm booking"}
               </Button>
               <Link href="/dashboard" className="text-sm font-semibold text-brand-700 transition hover:text-brand-800">

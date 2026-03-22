@@ -11,7 +11,9 @@ export default function Toast({ title, message, variant = "success" }: ToastProp
       : "border-rose-200 bg-rose-50 text-rose-900";
 
   return (
-    <div className={`fixed bottom-5 right-5 z-[60] max-w-sm rounded-3xl border px-5 py-4 shadow-lift ${styles}`}>
+    <div
+      className={`fixed bottom-4 left-4 right-4 z-[60] rounded-3xl border px-5 py-4 shadow-lift sm:bottom-5 sm:left-auto sm:right-5 sm:max-w-sm ${styles}`}
+    >
       <p className="text-sm font-semibold">{title}</p>
       <p className="mt-1 text-sm opacity-80">{message}</p>
     </div>

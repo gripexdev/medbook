@@ -20,7 +20,7 @@ export default function AdminBookingCard({
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <div className="flex flex-wrap items-center gap-3">
-            <h3 className="font-display text-3xl leading-none text-slate-900">{booking.serviceName}</h3>
+            <h3 className="font-display text-[28px] leading-none text-slate-900 sm:text-3xl">{booking.serviceName}</h3>
             <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">
               {booking.status}
             </span>
@@ -30,7 +30,7 @@ export default function AdminBookingCard({
           </p>
           <div className="mt-3 flex flex-wrap gap-4 text-xs uppercase tracking-[0.2em] text-slate-400">
             <span>{booking.fullName}</span>
-            <span>{booking.email}</span>
+            <span className="break-all">{booking.email}</span>
             <span>{booking.phone}</span>
           </div>
           {booking.notes ? (
@@ -38,7 +38,7 @@ export default function AdminBookingCard({
           ) : null}
         </div>
 
-        <div className="w-full max-w-[220px]">
+        <div className="w-full max-w-none sm:max-w-[220px]">
           <SelectField
             label="Appointment status"
             value={booking.status}
