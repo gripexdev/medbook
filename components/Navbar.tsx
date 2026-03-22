@@ -5,8 +5,29 @@ import SignOutButton from "@/components/SignOutButton";
 import { getSessionUser } from "@/lib/auth";
 import { siteConfig } from "@/config/site";
 
+function getUserInitials(name: string, email: string) {
+  const parts = name
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2);
+
+  if (parts.length > 0) {
+    return parts.map((part) => part[0]?.toUpperCase() || "").join("");
+  }
+
+  return email.trim().charAt(0).toUpperCase() || "U";
+}
+
+function getUserPrimaryLabel(name: string, email: string) {
+  const firstName = name.trim().split(/\s+/).filter(Boolean)[0];
+  return firstName || email.trim().split("@")[0] || "Account";
+}
+
 export default async function Navbar() {
   const user = await getSessionUser();
+  const userInitials = user ? getUserInitials(user.name, user.email) : "";
+  const userPrimaryLabel = user ? getUserPrimaryLabel(user.name, user.email) : "";
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/80 backdrop-blur-xl">
@@ -42,10 +63,20 @@ export default async function Navbar() {
           <div className="hidden items-center gap-3 md:flex">
             {user ? (
               <>
-                <div className="rounded-full border border-slate-200 bg-white px-4 py-2 text-right">
-                  <p className="text-sm font-semibold text-slate-900">{user.name}</p>
-                  <p className="text-xs text-slate-500">{user.email}</p>
-                </div>
+                <Link
+                  href="/dashboard"
+                  className="group flex items-center gap-3 rounded-full border border-slate-200 bg-white/90 px-3 py-2 shadow-sm transition hover:border-slate-300 hover:bg-white"
+                >
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-950 text-xs font-semibold uppercase tracking-[0.18em] text-white shadow-sm">
+                    {userInitials}
+                  </span>
+                  <div className="pr-1">
+                    <p className="text-sm font-semibold text-slate-900">{userPrimaryLabel}</p>
+                    <p className="text-[10px] uppercase tracking-[0.24em] text-slate-400">
+                      {user.role === "admin" ? "Admin account" : "Account"}
+                    </p>
+                  </div>
+                </Link>
                 <Link href="/booking" className={buttonClasses("primary", "sm")}>
                   Book Now
                 </Link>
@@ -129,10 +160,17 @@ export default async function Navbar() {
 
         {user ? (
           <div className="mt-3 flex items-center justify-between rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 text-sm md:hidden">
-            <div>
-              <p className="font-semibold text-slate-900">{user.name}</p>
-              <p className="text-xs text-slate-500">{user.email}</p>
-            </div>
+            <Link href="/dashboard" className="flex min-w-0 items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-950 text-xs font-semibold uppercase tracking-[0.18em] text-white shadow-sm">
+                {userInitials}
+              </span>
+              <div className="min-w-0">
+                <p className="truncate font-semibold text-slate-900">{userPrimaryLabel}</p>
+                <p className="text-[10px] uppercase tracking-[0.24em] text-slate-400">
+                  {user.role === "admin" ? "Admin account" : "Account"}
+                </p>
+              </div>
+            </Link>
             <SignOutButton variant="ghost" size="sm" />
           </div>
         ) : null}

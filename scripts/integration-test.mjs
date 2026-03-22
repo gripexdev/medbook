@@ -247,6 +247,8 @@ async function run() {
     const adminBookingsPayload = await parseJson(adminBookingsResponse);
     assert.equal(adminBookingsResponse.status, 200, "admin should list all bookings");
     assert.ok(adminBookingsPayload.bookings.length >= 1, "admin bookings list should not be empty");
+    assert.equal(adminBookingsPayload.pagination.page, 1, "admin bookings should include pagination meta");
+    assert.ok(typeof adminBookingsPayload.summary.total === "number", "admin bookings should include summary stats");
 
     const blackoutResponse = await adminClient.request(`${baseUrl}/api/admin/availability/blackouts`, {
       method: "POST",

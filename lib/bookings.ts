@@ -6,6 +6,8 @@ import { db } from "@/lib/db";
 import { getDateTimeFromBooking, getOccupiedSlotTimes } from "@/lib/schedule";
 import { updateUserName } from "@/lib/users";
 import type {
+  AdminBookingsQuery,
+  AdminBookingsResult,
   BookingInput,
   BookingNotificationKind,
   BookingRecord,
@@ -144,6 +146,122 @@ export function listAllBookings() {
     .all() as BookingRow[];
 
   return rows.map(mapBooking);
+}
+
+function getAdminBookingFilterParts(filters: AdminBookingsQuery) {
+  const clauses: string[] = [];
+  const params: string[] = [];
+
+  if (filters.status !== "all") {
+    clauses.push("status = ?");
+    params.push(filters.status);
+  }
+
+  if (filters.query) {
+    const searchValue = `%${filters.query.toLowerCase()}%`;
+    clauses.push(
+      `(
+        LOWER(service_name) LIKE ?
+        OR LOWER(full_name) LIKE ?
+        OR LOWER(email) LIKE ?
+        OR phone LIKE ?
+        OR preferred_date LIKE ?
+        OR preferred_time LIKE ?
+      )`
+    );
+    params.push(
+      searchValue,
+      searchValue,
+      searchValue,
+      `%${filters.query}%`,
+      `%${filters.query}%`,
+      `%${filters.query}%`
+    );
+  }
+
+  return {
+    whereClause: clauses.length > 0 ? `WHERE ${clauses.join(" AND ")}` : "",
+    params
+  };
+}
+
+export function listAdminBookings(filters: AdminBookingsQuery): AdminBookingsResult {
+  const normalizedPage = Math.max(1, filters.page);
+  const normalizedPageSize = Math.min(Math.max(filters.pageSize, 1), 24);
+  const normalizedFilters: AdminBookingsQuery = {
+    page: normalizedPage,
+    pageSize: normalizedPageSize,
+    status: filters.status,
+    query: filters.query.trim()
+  };
+  const { whereClause, params } = getAdminBookingFilterParts(normalizedFilters);
+  const totalRow = db
+    .prepare(
+      `
+        SELECT COUNT(*) as count
+        FROM bookings
+        ${whereClause}
+      `
+    )
+    .get(...params) as { count: number };
+  const total = totalRow?.count || 0;
+  const totalPages = total === 0 ? 1 : Math.ceil(total / normalizedPageSize);
+  const page = Math.min(normalizedPage, totalPages);
+  const offset = (page - 1) * normalizedPageSize;
+
+  const rows = db
+    .prepare(
+      `
+        ${getBaseBookingSelectQuery()}
+        ${whereClause}
+        ORDER BY preferred_date ASC, preferred_time ASC, created_at DESC
+        LIMIT ? OFFSET ?
+      `
+    )
+    .all(...params, normalizedPageSize, offset) as BookingRow[];
+
+  const summaryRow = db
+    .prepare(
+      `
+        SELECT
+          COUNT(*) as total,
+          SUM(CASE WHEN status = 'confirmed' THEN 1 ELSE 0 END) as confirmed,
+          SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed,
+          SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as cancelled,
+          SUM(CASE WHEN preferred_date = ? THEN 1 ELSE 0 END) as today
+        FROM bookings
+      `
+    )
+    .get(getLocalDateInputValue()) as {
+      total: number | null;
+      confirmed: number | null;
+      completed: number | null;
+      cancelled: number | null;
+      today: number | null;
+    };
+
+  return {
+    bookings: rows.map(mapBooking),
+    summary: {
+      total: summaryRow?.total || 0,
+      confirmed: summaryRow?.confirmed || 0,
+      completed: summaryRow?.completed || 0,
+      cancelled: summaryRow?.cancelled || 0,
+      today: summaryRow?.today || 0
+    },
+    pagination: {
+      page,
+      pageSize: normalizedPageSize,
+      total,
+      totalPages,
+      hasPreviousPage: page > 1,
+      hasNextPage: page < totalPages
+    },
+    filters: {
+      ...normalizedFilters,
+      page
+    }
+  };
 }
 
 export function getBookingById(bookingId: string) {
