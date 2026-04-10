@@ -5,7 +5,7 @@ const services: Service[] = [
     id: "initial-consultation",
     category: "Consultation",
     name: "Initial Consultation",
-    description: "A focused first appointment to understand goals, priorities, and the right next step.",
+    description: "Meet with one of our specialists to discuss your health goals and create a personalized care plan tailored to your needs.",
     duration: "45 min",
     durationMinutes: 45,
     price: "$95",
@@ -15,7 +15,7 @@ const services: Service[] = [
     id: "signature-care",
     category: "Care",
     name: "Signature Care Session",
-    description: "A premium appointment experience for returning clients who want steady, high-touch support.",
+    description: "Our most popular appointment for returning patients. Comprehensive evaluation, treatment, and ongoing wellness support.",
     duration: "60 min",
     durationMinutes: 60,
     price: "$140",
@@ -25,7 +25,7 @@ const services: Service[] = [
     id: "follow-up-review",
     category: "Consultation",
     name: "Follow-Up Review",
-    description: "A shorter check-in to review progress, adjust the plan, and confirm your next milestone.",
+    description: "A focused check-in to review your progress, adjust your treatment plan, and ensure you're on track to meet your health goals.",
     duration: "30 min",
     durationMinutes: 30,
     price: "$75",
@@ -34,8 +34,8 @@ const services: Service[] = [
   {
     id: "executive-priority",
     category: "Specialty",
-    name: "Executive Priority Visit",
-    description: "A concierge-style session with extra planning time and priority scheduling for busy clients.",
+    name: "Executive Health Check",
+    description: "A comprehensive wellness assessment with priority scheduling designed for busy professionals who value their time.",
     duration: "75 min",
     durationMinutes: 75,
     price: "$180",
@@ -46,32 +46,32 @@ const services: Service[] = [
 const testimonials: Testimonial[] = [
   {
     name: "Olivia Carter",
-    role: "Returning Client",
-    quote: "The experience feels calm, premium, and incredibly easy. Booking takes less than a minute.",
+    role: "Patient since 2023",
+    quote: "Booking my appointments used to be a nightmare. Now I can schedule everything in under a minute from my phone. The reminders are a lifesaver.",
     avatar: "/images/avatars/olivia.svg"
   },
   {
     name: "Daniel Brooks",
-    role: "Founder",
-    quote: "MEDBOOK looks like a real client project, not a demo. The flow is polished and the details feel intentional.",
+    role: "Executive Health Member",
+    quote: "The priority scheduling alone is worth it. I can see available slots in real time, book instantly, and never worry about phone tag again.",
     avatar: "/images/avatars/daniel.svg"
   },
   {
     name: "Maya Bennett",
-    role: "Wellness Studio Owner",
-    quote: "This is exactly the kind of clean interface clients trust. It feels modern without trying too hard.",
+    role: "Wellness Program Patient",
+    quote: "I've been to a lot of clinics, and this is by far the most seamless experience. Professional, modern, and genuinely easy to use.",
     avatar: "/images/avatars/maya.svg"
   }
 ];
 
 export const siteConfig = {
   name: "MEDBOOK",
-  businessLabel: "Booking Platform for Modern Care",
-  tagline: "Appointment booking with product-grade clarity.",
+  businessLabel: "Modern Healthcare Scheduling",
+  tagline: "Healthcare scheduling, simplified.",
   description:
-    "A polished SaaS-style booking website concept for clinics, wellness teams, and premium service businesses.",
+    "Book appointments with top-rated healthcare providers. Real-time availability, instant confirmation, and automated reminders.",
   heroDescription:
-    "MEDBOOK gives clinics, consultants, and care teams a faster, cleaner way to present availability, highlight services, and turn visits into a high-trust digital experience.",
+    "Skip the phone calls and waiting rooms. MEDBOOK lets you browse services, check real-time availability, and book confirmed appointments in seconds - all from your device.",
   heroImage: "/images/hero-booking.svg",
   contact: {
     email: "hello@medbook.co",
@@ -94,9 +94,27 @@ export const siteConfig = {
     { label: "Dribbble", href: "#" }
   ],
   heroStats: [
-    { value: "90 sec", label: "Average booking time" },
-    { value: "4.9/5", label: "Client satisfaction" },
-    { value: "24/7", label: "Always-on scheduling" }
+    { value: "2,400+", label: "Appointments booked" },
+    { value: "4.9/5", label: "Patient satisfaction" },
+    { value: "< 60s", label: "Average booking time" }
+  ],
+  trustBadges: [
+    {
+      title: "HIPAA Compliant",
+      description: "Your health data is encrypted and handled according to federal privacy standards."
+    },
+    {
+      title: "Instant Confirmation",
+      description: "Receive booking confirmation via email the moment your appointment is scheduled."
+    },
+    {
+      title: "24/7 Online Booking",
+      description: "Schedule appointments any time, day or night. No phone calls required."
+    },
+    {
+      title: "Automated Reminders",
+      description: "Never miss an appointment with email reminders sent 24 hours before your visit."
+    }
   ],
   services,
   testimonials,
@@ -113,16 +131,16 @@ export const siteConfig = {
   ],
   steps: [
     {
-      title: "Choose service",
-      description: "Select the session that fits your needs, timeline, and budget."
+      title: "Choose your service",
+      description: "Browse our care options and select the appointment type that fits your needs."
     },
     {
-      title: "Pick date and time",
-      description: "Choose a preferred appointment slot with a clean, guided form."
+      title: "Pick a time that works",
+      description: "View real-time availability and choose a date and time slot that suits your schedule."
     },
     {
-      title: "Confirm booking",
-      description: "Submit once and review your confirmed appointment from the dashboard."
+      title: "You're all set",
+      description: "Receive instant confirmation and manage your appointments from your personal dashboard."
     }
   ]
 };

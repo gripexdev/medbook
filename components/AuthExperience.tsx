@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import InputField from "@/components/InputField";
-import PageIntro from "@/components/PageIntro";
 import Toast from "@/components/Toast";
 import { flattenFieldErrors, loginSchema, registerSchema } from "@/lib/validators";
 import type { LoginInput, RegisterInput } from "@/lib/types";
@@ -26,21 +25,21 @@ type AuthFieldErrors = Partial<Record<keyof AuthFormValues, string>>;
 
 const authCopy = {
   login: {
-    eyebrow: "Sign In",
-    title: "Access your bookings securely",
+    eyebrow: "Welcome back",
+    title: "Sign in to your account",
     description:
-      "Appointments, confirmations, and cancellations are now tied to your account instead of a public email lookup.",
+      "Access your appointments, booking history, and manage upcoming visits.",
     submitLabel: "Sign In",
-    alternateLabel: "Need an account?",
+    alternateLabel: "Don't have an account?",
     alternateHref: "/register",
     alternateLinkText: "Create one",
     endpoint: "/api/auth/login"
   },
   register: {
-    eyebrow: "Create Account",
-    title: "Set up your MEDBOOK workspace",
+    eyebrow: "Get started",
+    title: "Create your patient account",
     description:
-      "Create a secure account once, then manage bookings, keep appointment history, and move through the scheduling flow without friction.",
+      "Set up your account to book appointments, view your history, and receive automated reminders.",
     submitLabel: "Create Account",
     alternateLabel: "Already have an account?",
     alternateHref: "/login",
@@ -48,6 +47,21 @@ const authCopy = {
     endpoint: "/api/auth/register"
   }
 } as const;
+
+const features = [
+  {
+    title: "Online booking",
+    description: "Schedule appointments 24/7 with real-time availability."
+  },
+  {
+    title: "Appointment history",
+    description: "View past and upcoming visits all in one place."
+  },
+  {
+    title: "Automated reminders",
+    description: "Get email notifications 24 hours before your appointment."
+  }
+];
 
 export default function AuthExperience({ mode, redirectTo }: AuthExperienceProps) {
   const router = useRouter();
@@ -133,7 +147,7 @@ export default function AuthExperience({ mode, redirectTo }: AuthExperienceProps
 
       setToast({
         title: mode === "login" ? "Signed in" : "Account created",
-        message: "Redirecting you to your MEDBOOK workspace.",
+        message: "Redirecting you now...",
         variant: "success"
       });
 
@@ -151,16 +165,16 @@ export default function AuthExperience({ mode, redirectTo }: AuthExperienceProps
   };
 
   return (
-    <div className="section-shell py-16">
-      <div className="grid gap-8 lg:grid-cols-[0.94fr_1.06fr]">
-        <section className="panel p-6 sm:p-8 md:p-10">
-          <PageIntro
-            eyebrow={content.eyebrow}
-            title={content.title}
-            description={content.description}
-          />
+    <div className="section-shell py-12 md:py-16">
+      <div className="grid gap-8 lg:grid-cols-2">
+        <section className="rounded-[32px] border border-slate-200/60 bg-white p-6 sm:p-8 md:p-10">
+          <p className="eyebrow">{content.eyebrow}</p>
+          <h1 className="mt-3 font-display text-[28px] font-semibold leading-tight tracking-[-0.03em] text-slate-950 sm:text-[34px]">
+            {content.title}
+          </h1>
+          <p className="mt-3 text-sm leading-relaxed text-slate-600">{content.description}</p>
 
-          <form className="mt-10 grid gap-6" onSubmit={handleSubmit}>
+          <form className="mt-8 grid gap-5" onSubmit={handleSubmit}>
             {mode === "register" ? (
               <InputField
                 label="Full name"
@@ -212,7 +226,7 @@ export default function AuthExperience({ mode, redirectTo }: AuthExperienceProps
                 {content.alternateLabel}{" "}
                 <Link
                   href={`${content.alternateHref}?redirectTo=${encodeURIComponent(redirectTo)}`}
-                  className="font-semibold text-brand-700 transition hover:text-brand-800"
+                  className="font-semibold text-brand-600 transition hover:text-brand-700"
                 >
                   {content.alternateLinkText}
                 </Link>
@@ -221,33 +235,25 @@ export default function AuthExperience({ mode, redirectTo }: AuthExperienceProps
           </form>
         </section>
 
-        <aside className="panel-muted overflow-hidden p-6 sm:p-8 md:p-10">
-          <p className="eyebrow">Professional setup</p>
-          <h2 className="mt-4 font-display text-[32px] font-semibold leading-[1.02] tracking-[-0.04em] text-slate-950 sm:text-[38px] md:text-[48px]">
-            Account-based booking with secure API access.
-          </h2>
-          <p className="mt-5 max-w-xl text-sm leading-7 text-slate-600 md:text-base">
-            This version replaces the public demo behavior with authenticated sessions, private booking history, and account-scoped appointment management.
-          </p>
+        <aside className="hidden lg:flex lg:flex-col lg:justify-center">
+          <div className="dark-gradient rounded-[32px] p-8 text-white md:p-10">
+            <p className="text-sm font-medium uppercase tracking-[0.25em] text-brand-300">Why MEDBOOK?</p>
+            <h2 className="mt-4 font-display text-[28px] font-semibold leading-tight tracking-[-0.03em] sm:text-[34px]">
+              Modern healthcare deserves a modern experience.
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-slate-300">
+              No more phone tag or paper forms. Everything you need to manage your healthcare appointments, in one place.
+            </p>
 
-          <div className="mt-8 grid gap-4">
-            <div className="rounded-[28px] border border-white/90 bg-white/90 p-5 shadow-sm">
-              <p className="text-sm font-semibold text-slate-900">Secure session cookies</p>
-              <p className="mt-2 text-sm leading-7 text-slate-600">
-                Authentication persists across the booking flow with protected server routes.
-              </p>
-            </div>
-            <div className="rounded-[28px] border border-white/90 bg-white/90 p-5 shadow-sm">
-              <p className="text-sm font-semibold text-slate-900">Private appointment history</p>
-              <p className="mt-2 text-sm leading-7 text-slate-600">
-                Each user sees only their own bookings and can cancel without exposing other records.
-              </p>
-            </div>
-            <div className="rounded-[28px] border border-white/90 bg-white/90 p-5 shadow-sm">
-              <p className="text-sm font-semibold text-slate-900">Validated booking input</p>
-              <p className="mt-2 text-sm leading-7 text-slate-600">
-                Forms and APIs share the same validation rules so bad input is blocked consistently.
-              </p>
+            <div className="mt-8 grid gap-4">
+              {features.map((feature) => (
+                <div key={feature.title} className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                  <p className="text-sm font-semibold text-white">{feature.title}</p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-slate-400">
+                    {feature.description}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </aside>

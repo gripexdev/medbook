@@ -1,5 +1,5 @@
 import Link from "next/link";
-import BrandLogo from "@/components/BrandLogo";
+import { BrandMark } from "@/components/BrandLogo";
 import { siteConfig } from "@/config/site";
 
 function SocialIcon({ label }: { label: string }) {
@@ -30,22 +30,25 @@ function SocialIcon({ label }: { label: string }) {
 
 export default function Footer() {
   return (
-    <footer className="border-t border-slate-200/80 bg-white/80">
+    <footer className="mt-20 border-t border-slate-200/60 bg-white">
       <div className="section-shell py-14">
-        <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
-          <div>
-            <BrandLogo
-              showSubtitle={false}
-              markClassName="h-12 w-12"
-              titleClassName="font-display text-3xl leading-none tracking-[-0.05em] text-slate-950"
-            />
-            <p className="mt-4 max-w-md text-sm leading-7 text-slate-600">{siteConfig.description}</p>
-            <div className="mt-6 flex gap-3">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="sm:col-span-2 lg:col-span-1">
+            <div className="flex items-center gap-2.5">
+              <BrandMark className="h-9 w-9" />
+              <span className="font-display text-xl font-semibold tracking-[-0.04em] text-slate-950">
+                {siteConfig.name}
+              </span>
+            </div>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-500">
+              {siteConfig.description}
+            </p>
+            <div className="mt-5 flex gap-2">
               {siteConfig.socialLinks.map((item) => (
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:border-brand-200 hover:text-brand-700"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200/70 bg-slate-50 text-slate-500 transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-600"
                   aria-label={item.label}
                 >
                   <SocialIcon label={item.label} />
@@ -55,21 +58,52 @@ export default function Footer() {
           </div>
 
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-400">Navigation</p>
-            <ul className="mt-5 space-y-3 text-sm text-slate-600">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Navigation</p>
+            <ul className="mt-4 space-y-2.5 text-sm">
               {siteConfig.navigation.map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href} className="transition hover:text-slate-900">
+                  <Link href={item.href} className="text-slate-600 transition hover:text-slate-900">
                     {item.label}
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link href="/services" className="text-slate-600 transition hover:text-slate-900">
+                  All Services
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-400">Contact</p>
-            <ul className="mt-5 space-y-3 text-sm leading-7 text-slate-600">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">For Patients</p>
+            <ul className="mt-4 space-y-2.5 text-sm">
+              <li>
+                <Link href="/booking" className="text-slate-600 transition hover:text-slate-900">
+                  Book Appointment
+                </Link>
+              </li>
+              <li>
+                <Link href="/login" className="text-slate-600 transition hover:text-slate-900">
+                  Patient Portal
+                </Link>
+              </li>
+              <li>
+                <Link href="/register" className="text-slate-600 transition hover:text-slate-900">
+                  Create Account
+                </Link>
+              </li>
+              <li>
+                <Link href="/dashboard" className="text-slate-600 transition hover:text-slate-900">
+                  My Appointments
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Contact</p>
+            <ul className="mt-4 space-y-2.5 text-sm text-slate-600">
               <li>{siteConfig.contact.email}</li>
               <li>{siteConfig.contact.phone}</li>
               <li>{siteConfig.contact.address}</li>
@@ -77,8 +111,13 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-stone-200 pt-6 text-xs uppercase tracking-[0.24em] text-slate-400">
-          {new Date().getFullYear()} MEDBOOK. Designed as a premium booking concept.
+        <div className="mt-12 flex flex-col gap-4 border-t border-slate-200/60 pt-6 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
+          <p>{new Date().getFullYear()} MEDBOOK. All rights reserved.</p>
+          <div className="flex gap-6">
+            <Link href="#" className="transition hover:text-slate-600">Privacy Policy</Link>
+            <Link href="#" className="transition hover:text-slate-600">Terms of Service</Link>
+            <Link href="#" className="transition hover:text-slate-600">HIPAA Notice</Link>
+          </div>
         </div>
       </div>
     </footer>
