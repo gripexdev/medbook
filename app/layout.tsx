@@ -1,19 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope, Sora } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import Sidebar from "@/components/Sidebar";
+import TopBar from "@/components/TopBar";
 import { siteConfig } from "@/config/site";
 
-const manrope = Manrope({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-body"
-});
-
-const sora = Sora({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-display"
+  variable: "--font-inter"
 });
 
 export const metadata: Metadata = {
@@ -26,16 +20,22 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f8fbff"
+  themeColor: "#F4F5F7"
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${manrope.variable} ${sora.variable}`}>
-      <body className="flex min-h-screen flex-col">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+    <html lang="en" className={inter.variable}>
+      <body className="h-screen overflow-hidden bg-jira-bg font-sans text-jira-text-primary antialiased">
+        <div className="flex h-full">
+          <Sidebar />
+          <div className="flex flex-1 flex-col overflow-hidden">
+            <TopBar />
+            <main className="flex-1 overflow-y-auto">
+              {children}
+            </main>
+          </div>
+        </div>
       </body>
     </html>
   );

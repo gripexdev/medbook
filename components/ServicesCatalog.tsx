@@ -12,18 +12,16 @@ type ServicesCatalogProps = {
 export default function ServicesCatalog({ services }: ServicesCatalogProps) {
   const [activeCategory, setActiveCategory] = useState<ServiceCategory | "All">("All");
 
-  const categories = ["All", ...new Set(services.map((service) => service.category))] as Array<
-    ServiceCategory | "All"
-  >;
+  const categories = ["All", ...new Set(services.map((s) => s.category))] as Array<ServiceCategory | "All">;
 
   const filteredServices =
     activeCategory === "All"
       ? services
-      : services.filter((service) => service.category === activeCategory);
+      : services.filter((s) => s.category === activeCategory);
 
   return (
     <div>
-      <div className="flex gap-3 overflow-x-auto pb-1">
+      <div className="flex gap-2 overflow-x-auto pb-1">
         {categories.map((category) => (
           <button
             key={category}
@@ -41,7 +39,7 @@ export default function ServicesCatalog({ services }: ServicesCatalogProps) {
         ))}
       </div>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-2">
+      <div className="mt-6 grid gap-4 lg:grid-cols-2">
         {filteredServices.map((service) => (
           <ServiceCard key={service.id} {...service} />
         ))}

@@ -8,59 +8,47 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          50: "#eff6ff",
-          100: "#dbeafe",
-          200: "#bfd8ff",
-          300: "#93bbff",
-          400: "#5f97ff",
-          500: "#2563ff",
-          600: "#1d4ed8",
-          700: "#1d42af",
-          800: "#1d3a8a",
-          900: "#1c336d"
+          50: "#E6F0FF",
+          100: "#B3D4FF",
+          200: "#4C9AFF",
+          300: "#2684FF",
+          400: "#0065FF",
+          500: "#0052CC",
+          600: "#0747A6",
+          700: "#003884",
+          800: "#002B63",
+          900: "#001D42"
         },
-        accent: {
-          50: "#f0fdfa",
-          100: "#ccfbf1",
-          200: "#99f6e4",
-          300: "#5eead4",
-          400: "#2dd4bf",
-          500: "#14b8a6"
+        jira: {
+          bg: "#F4F5F7",
+          sidebar: "#0052CC",
+          "sidebar-dark": "#1D2125",
+          card: "#FFFFFF",
+          border: "#DFE1E6",
+          "text-primary": "#172B4D",
+          "text-secondary": "#6B778C",
+          success: "#36B37E",
+          warning: "#FF8B00",
+          danger: "#DE350B",
+          "success-bg": "#E3FCEF",
+          "warning-bg": "#FFFAE6",
+          "danger-bg": "#FFEBE6",
+          hover: "#EBECF0"
         }
       },
       fontFamily: {
-        display: ["var(--font-display)", "system-ui", "sans-serif"],
-        body: ["var(--font-body)", "system-ui", "sans-serif"]
+        sans: ["var(--font-inter)", "system-ui", "sans-serif"]
       },
       boxShadow: {
-        soft: "0 18px 50px rgba(15, 23, 42, 0.08)",
-        lift: "0 28px 80px rgba(15, 23, 42, 0.14)",
-        glow: "0 0 60px rgba(37, 99, 255, 0.15)",
-        "inner-glow": "inset 0 1px 0 rgba(255, 255, 255, 0.1)"
+        sm: "0 1px 2px rgba(9, 30, 66, 0.08)",
+        card: "0 1px 3px rgba(9, 30, 66, 0.13)",
+        md: "0 4px 8px rgba(9, 30, 66, 0.08), 0 0 1px rgba(9, 30, 66, 0.12)",
+        lg: "0 8px 16px rgba(9, 30, 66, 0.08), 0 0 1px rgba(9, 30, 66, 0.12)",
+        overlay: "0 12px 24px rgba(9, 30, 66, 0.15), 0 0 1px rgba(9, 30, 66, 0.2)"
       },
-      animation: {
-        "fade-in": "fade-in 0.6s ease-out both",
-        "slide-up": "slide-up 0.7s ease-out both",
-        "float": "float 6s ease-in-out infinite",
-        "pulse-soft": "pulse-soft 3s ease-in-out infinite"
-      },
-      keyframes: {
-        "fade-in": {
-          from: { opacity: "0" },
-          to: { opacity: "1" }
-        },
-        "slide-up": {
-          from: { opacity: "0", transform: "translateY(20px)" },
-          to: { opacity: "1", transform: "translateY(0)" }
-        },
-        "float": {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-10px)" }
-        },
-        "pulse-soft": {
-          "0%, 100%": { opacity: "0.6" },
-          "50%": { opacity: "1" }
-        }
+      spacing: {
+        sidebar: "240px",
+        topbar: "56px"
       }
     }
   },

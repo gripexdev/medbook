@@ -7,15 +7,17 @@ type ToastProps = {
 export default function Toast({ title, message, variant = "success" }: ToastProps) {
   const styles =
     variant === "success"
-      ? "border-emerald-200 bg-emerald-50 text-emerald-900"
-      : "border-rose-200 bg-rose-50 text-rose-900";
+      ? "border-l-4 border-l-jira-success bg-jira-success-bg text-jira-text-primary"
+      : "border-l-4 border-l-jira-danger bg-jira-danger-bg text-jira-text-primary";
 
   return (
     <div
-      className={`fixed bottom-4 left-4 right-4 z-[60] rounded-3xl border px-5 py-4 shadow-lift sm:bottom-5 sm:left-auto sm:right-5 sm:max-w-sm ${styles}`}
+      className={`fixed bottom-4 right-4 z-[60] w-80 rounded-lg border border-jira-border shadow-overlay ${styles}`}
     >
-      <p className="text-sm font-semibold">{title}</p>
-      <p className="mt-1 text-sm opacity-80">{message}</p>
+      <div className="px-4 py-3">
+        <p className="text-sm font-semibold">{title}</p>
+        <p className="mt-0.5 text-xs text-jira-text-secondary">{message}</p>
+      </div>
     </div>
   );
 }

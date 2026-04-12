@@ -16,13 +16,13 @@ export default function PageIntro({
   centered = false
 }: PageIntroProps) {
   return (
-    <div className={centered ? "mx-auto max-w-3xl text-center" : "max-w-2xl"}>
-      <p className="eyebrow">{eyebrow}</p>
-      <h1 className="mt-4 font-display text-[32px] font-semibold leading-[1.02] tracking-[-0.04em] text-slate-950 sm:text-[38px] md:text-[54px]">
+    <div className={centered ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
+      <p className="label">{eyebrow}</p>
+      <h1 className="mt-2 text-2xl font-semibold tracking-tight text-jira-text-primary sm:text-3xl">
         {title}
       </h1>
-      <p className="mt-4 text-sm leading-7 text-slate-600 md:text-[17px]">{description}</p>
-      {action ? <div className="mt-8">{action}</div> : null}
+      <p className="mt-2 text-sm leading-relaxed text-jira-text-secondary">{description}</p>
+      {action ? <div className="mt-6">{action}</div> : null}
     </div>
   );
 }
